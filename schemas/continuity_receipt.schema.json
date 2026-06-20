@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://velvet-ai.local/schemas/continuity_receipt.schema.json",
+  "title": "ContinuityReceiptPayload",
+  "description": "Envelope produced by ContinuityReceiptBridge for the velvet-receipts layer.",
+  "type": "object",
+  "required": ["event_type", "source", "subject_id", "payload"],
+  "additionalProperties": false,
+  "properties": {
+    "event_type": { "type": "string", "minLength": 1 },
+    "source":     { "type": "string", "minLength": 1 },
+    "subject_id": { "type": "string", "minLength": 1 },
+    "payload":    { "type": "object" }
+  }
+}
