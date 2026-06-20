@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://velvet-ai.local/schemas/drift_event.schema.json",
+  "title": "DriftEvent",
+  "description": "Structured record of a detected continuity drift condition.",
+  "type": "object",
+  "required": ["event_id", "drift_type", "severity", "expected", "observed", "action", "created_at"],
+  "additionalProperties": false,
+  "properties": {
+    "event_id":   { "type": "string", "minLength": 1 },
+    "drift_type": { "type": "string", "minLength": 1 },
+    "severity":   { "type": "string", "enum": ["info", "low", "medium", "high", "critical"] },
+    "expected":   { "type": "string" },
+    "observed":   { "type": "string" },
+    "action":     { "type": "string", "minLength": 1 },
+    "notes":      { "type": "string" },
+    "created_at": { "type": "string", "minLength": 1 }
+  }
+}

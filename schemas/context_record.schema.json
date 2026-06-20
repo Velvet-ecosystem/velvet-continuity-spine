@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://velvet-ai.local/schemas/context_record.schema.json",
+  "title": "ContextRecord",
+  "description": "Bounded runtime context descriptor for a Velvet AI instance.",
+  "type": "object",
+  "required": ["record_id", "context_id", "name", "purpose", "allowed_memory_classes", "denied_memory_classes", "active", "created_at"],
+  "additionalProperties": false,
+  "properties": {
+    "record_id":              { "type": "string", "minLength": 1 },
+    "context_id":             { "type": "string", "minLength": 1 },
+    "name":                   { "type": "string", "minLength": 1 },
+    "purpose":                { "type": "string", "minLength": 1 },
+    "allowed_memory_classes": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "denied_memory_classes":  { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "active":                 { "type": "boolean" },
+    "created_at":             { "type": "string", "minLength": 1 }
+  }
+}
