@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://velvet-ai.local/schemas/identity_record.schema.json",
+  "title": "IdentityRecord",
+  "description": "Public-safe identity descriptor for a Velvet AI runtime instance.",
+  "type": "object",
+  "required": ["record_id", "instance_id", "name", "role", "runtime_class", "surface", "memory_scope", "authority_scope", "created_at"],
+  "additionalProperties": false,
+  "properties": {
+    "record_id":           { "type": "string", "minLength": 1 },
+    "instance_id":         { "type": "string", "minLength": 1 },
+    "name":                { "type": "string", "minLength": 1 },
+    "role":                { "type": "string", "minLength": 1 },
+    "runtime_class":       { "type": "string", "minLength": 1 },
+    "surface":             { "type": "string", "minLength": 1 },
+    "memory_scope":        { "type": "string", "minLength": 1 },
+    "authority_scope":     { "type": "string", "minLength": 1 },
+    "lineage_parent":      { "type": ["string", "null"] },
+    "receipt_chain_anchor":{ "type": ["string", "null"] },
+    "created_at":          { "type": "string", "minLength": 1 }
+  }
+}
