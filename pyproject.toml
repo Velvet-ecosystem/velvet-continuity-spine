@@ -7,7 +7,7 @@ name = "velvet-continuity-spine"
 version = "0.1.1"
 description = "Local-first identity, lineage, context, drift, and receipt-compatible continuity records for Velvet AI."
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.8"
 license = { text = "GPL-3.0-only" }
 authors = [
   { name = "Velvet Ecosystem" }
@@ -18,6 +18,8 @@ classifiers = [
   "Intended Audience :: Developers",
   "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
   "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
