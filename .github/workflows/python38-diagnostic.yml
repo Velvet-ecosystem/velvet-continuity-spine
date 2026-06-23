@@ -24,3 +24,10 @@ jobs:
 
       - name: Run concise diagnostic
         run: python scripts/ci_test_tail.py
+
+      - name: Upload diagnostic artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: python38-diagnostic
+          path: python38-diagnostic.txt
