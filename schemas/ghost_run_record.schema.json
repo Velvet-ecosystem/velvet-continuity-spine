@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://velvet.local/schemas/ghost_run_record.schema.json",
+  "title": "Velvet Ghost Run Record",
+  "type": "object",
+  "required": ["record_kind", "record_id", "run_id", "observation_event_id", "event_type", "runtime_route", "surface", "repo_fingerprints", "observed_frame_count", "read_only", "synthetic_fixture", "physical_bus_opened", "can_transmission_attempted", "actuation_performed", "authority_granted", "created_at"],
+  "properties": {
+    "record_kind": {"const": "ghost_run_record"},
+    "record_id": {"type": "string", "minLength": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "observation_event_id": {"type": "string", "minLength": 1},
+    "event_type": {"const": "vehicle.can.ghost_observation"},
+    "runtime_route": {"const": "can-ghost"},
+    "surface": {"type": "string", "minLength": 1},
+    "receipt_anchor": {"type": ["string", "null"]},
+    "repo_fingerprints": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "observed_frame_count": {"type": "integer", "minimum": 0},
+    "read_only": {"const": true},
+    "synthetic_fixture": {"const": true},
+    "physical_bus_opened": {"const": false},
+    "can_transmission_attempted": {"const": false},
+    "actuation_performed": {"const": false},
+    "authority_granted": {"const": false},
+    "created_at": {"type": "string", "minLength": 1}
+  },
+  "additionalProperties": false
+}
