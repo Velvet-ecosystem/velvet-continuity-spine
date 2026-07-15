@@ -18,6 +18,7 @@ from typing import Any
 
 from velvet_continuity.context_record import ContextRecord
 from velvet_continuity.drift_event import DriftEvent
+from velvet_continuity.ghost_run import GhostRunRecord
 from velvet_continuity.identity import IdentityRecord
 from velvet_continuity.lineage import LineageRecord
 from velvet_continuity.surface_binding import SurfaceBinding
@@ -44,18 +45,7 @@ class ContinuityReceiptBridge:
         payload: dict[str, Any],
         subject_id: str,
     ) -> dict[str, Any]:
-        """
-        Wrap a payload dict in the standard receipt envelope.
-
-        Parameters
-        ----------
-        event_type : str
-            Namespaced event descriptor (e.g. "IDENTITY_CREATED").
-        payload : dict
-            The record data to include.
-        subject_id : str
-            The instance_id or record identifier this event concerns.
-        """
+        """Wrap a payload dict in the standard receipt envelope."""
         require_non_empty(event_type, "event_type")
         require_non_empty(subject_id, "subject_id")
         require_mapping(payload, "payload")
@@ -94,6 +84,12 @@ class ContinuityReceiptBridge:
             raise TypeError(f"Expected DriftEvent, got {type(event).__name__}")
         require_non_empty(subject_id, "subject_id")
         return self.format_event("DRIFT_DETECTED", event.to_dict(), subject_id)
+
+    def ghost_run_recorded(self, record: GhostRunRecord) -> dict[str, Any]:
+        """Format a receipt payload for: a public-safe Ghost System run was recorded."""
+        if not isinstance(record, GhostRunRecord):
+            raise TypeError(f"Expected GhostRunRecord, got {type(record).__name__}")
+        return self.format_event("GHOST_RUN_RECORDED", record.to_dict(), record.run_id)
 
     def surface_bound(self, record: SurfaceBinding) -> dict[str, Any]:
         """Format a receipt payload for: a surface binding was established."""

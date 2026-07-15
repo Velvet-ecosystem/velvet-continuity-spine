@@ -14,6 +14,7 @@ from dataclasses import dataclass, field
 
 from velvet_continuity.drift_detector import DriftDetector
 from velvet_continuity.drift_event import DriftEvent
+from velvet_continuity.ghost_run import GhostRunRecord
 from velvet_continuity.identity import IdentityRecord
 from velvet_continuity.memory_index import MemoryIndex
 from velvet_continuity.receipt_bridge import ContinuityReceiptBridge
@@ -55,6 +56,20 @@ class ContinuitySpine:
     ) -> list[DriftEvent]:
         """Compare two identity records and return any drift events."""
         return self.detector.compare_identity(expected, observed)
+
+    def record_ghost_run(self, record: GhostRunRecord) -> dict:
+        """
+        Register a public-safe Ghost System run and return a
+        receipt-compatible payload for the GHOST_RUN_RECORDED event.
+        """
+        if not isinstance(record, GhostRunRecord):
+            raise TypeError(f"Expected GhostRunRecord, got {type(record).__name__}")
+        self.index.add("ghost-run:{}".format(record.run_id), record.to_dict())
+        return self.receipts.ghost_run_recorded(record)
+
+    def get_ghost_run(self, run_id: str) -> dict | None:
+        """Retrieve a registered Ghost System run record by run_id."""
+        return self.index.get("ghost-run:{}".format(run_id))
 
     def get_identity(self, instance_id: str) -> dict | None:
         """Retrieve a registered identity record dict by instance_id."""
