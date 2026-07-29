@@ -17,33 +17,20 @@ from velvet_continuity.drift_event import DriftEvent
 from velvet_continuity.ghost_run import GhostRunRecord
 from velvet_continuity.identity import IdentityRecord
 from velvet_continuity.memory_index import MemoryIndex
+from velvet_continuity.organ_lineage import OrganLineageRecord
 from velvet_continuity.receipt_bridge import ContinuityReceiptBridge
 
 
 @dataclass
 class ContinuitySpine:
-    """
-    Thin facade joining identity index, drift detection, and receipt formatting.
-
-    Attributes
-    ----------
-    index : MemoryIndex
-        In-process index of registered identity records.
-    detector : DriftDetector
-        Drift comparison logic.
-    receipts : ContinuityReceiptBridge
-        Receipt payload formatter.
-    """
+    """Thin facade joining continuity indexing, drift, and receipt formatting."""
 
     index: MemoryIndex = field(default_factory=MemoryIndex)
     detector: DriftDetector = field(default_factory=DriftDetector)
     receipts: ContinuityReceiptBridge = field(default_factory=ContinuityReceiptBridge)
 
     def register_identity(self, record: IdentityRecord) -> dict:
-        """
-        Register an identity record in the local index and return a
-        receipt-compatible payload for the IDENTITY_CREATED event.
-        """
+        """Register identity and return an IDENTITY_CREATED receipt envelope."""
         if not isinstance(record, IdentityRecord):
             raise TypeError(f"Expected IdentityRecord, got {type(record).__name__}")
         self.index.add(record.instance_id, record.to_dict())
@@ -58,14 +45,27 @@ class ContinuitySpine:
         return self.detector.compare_identity(expected, observed)
 
     def record_ghost_run(self, record: GhostRunRecord) -> dict:
-        """
-        Register a public-safe Ghost System run and return a
-        receipt-compatible payload for the GHOST_RUN_RECORDED event.
-        """
+        """Register a public-safe Ghost run and return its receipt envelope."""
         if not isinstance(record, GhostRunRecord):
             raise TypeError(f"Expected GhostRunRecord, got {type(record).__name__}")
         self.index.add("ghost-run:{}".format(record.run_id), record.to_dict())
         return self.receipts.ghost_run_recorded(record)
+
+    def record_organ_lineage(self, record: OrganLineageRecord) -> dict:
+        """Register one durable named-organ transition and return evidence."""
+        if not isinstance(record, OrganLineageRecord):
+            raise TypeError(
+                f"Expected OrganLineageRecord, got {type(record).__name__}"
+            )
+        self.index.add(
+            "organ-lineage:{}".format(record.record_id),
+            record.to_dict(),
+        )
+        return self.receipts.organ_lineage_recorded(record)
+
+    def get_organ_lineage(self, record_id: str) -> dict | None:
+        """Retrieve a durable named-organ lineage record by record ID."""
+        return self.index.get("organ-lineage:{}".format(record_id))
 
     def get_ghost_run(self, run_id: str) -> dict | None:
         """Retrieve a registered Ghost System run record by run_id."""

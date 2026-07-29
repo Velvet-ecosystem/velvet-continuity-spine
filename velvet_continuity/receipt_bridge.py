@@ -7,7 +7,6 @@ payload dicts.
 
 This bridge deliberately does not import or depend on velvet-receipts.
 It returns plain dicts that another layer passes to a receipt logger.
-
 Pattern: format here, pass the dict to the receipts layer separately.
 """
 
@@ -21,18 +20,14 @@ from velvet_continuity.drift_event import DriftEvent
 from velvet_continuity.ghost_run import GhostRunRecord
 from velvet_continuity.identity import IdentityRecord
 from velvet_continuity.lineage import LineageRecord
+from velvet_continuity.organ_lineage import OrganLineageRecord
 from velvet_continuity.surface_binding import SurfaceBinding
 from velvet_continuity.validation import require_non_empty, require_mapping
 
 
 @dataclass(frozen=True)
 class ContinuityReceiptBridge:
-    """
-    Format continuity events as receipt-compatible payload dicts.
-
-    All methods return plain dicts. No I/O is performed. The caller is
-    responsible for passing the dict to the appropriate receipt logger.
-    """
+    """Format continuity events as receipt-compatible payload dicts."""
 
     source: str = "velvet-continuity-spine"
 
@@ -70,6 +65,16 @@ class ContinuityReceiptBridge:
             "LINEAGE_LINKED", record.to_dict(), record.child_instance_id
         )
 
+    def organ_lineage_recorded(self, record: OrganLineageRecord) -> dict[str, Any]:
+        """Format evidence for one durable named-organ body transition."""
+        if not isinstance(record, OrganLineageRecord):
+            raise TypeError(
+                f"Expected OrganLineageRecord, got {type(record).__name__}"
+            )
+        return self.format_event(
+            "ORGAN_LINEAGE_RECORDED", record.to_dict(), record.record_id
+        )
+
     def context_recorded(self, record: ContextRecord) -> dict[str, Any]:
         """Format a receipt payload for: a context record was captured."""
         if not isinstance(record, ContextRecord):
@@ -86,7 +91,7 @@ class ContinuityReceiptBridge:
         return self.format_event("DRIFT_DETECTED", event.to_dict(), subject_id)
 
     def ghost_run_recorded(self, record: GhostRunRecord) -> dict[str, Any]:
-        """Format a receipt payload for: a public-safe Ghost System run was recorded."""
+        """Format evidence for a public-safe Ghost System run."""
         if not isinstance(record, GhostRunRecord):
             raise TypeError(f"Expected GhostRunRecord, got {type(record).__name__}")
         return self.format_event("GHOST_RUN_RECORDED", record.to_dict(), record.run_id)

@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://velvet.local/schemas/organ_lineage_record.schema.json",
+  "title": "Velvet Organ Lineage Record",
+  "type": "object",
+  "required": [
+    "record_kind",
+    "record_id",
+    "body_id",
+    "organ",
+    "transition",
+    "body_registry_revision",
+    "receipt_anchor",
+    "reason",
+    "capabilities",
+    "permanent",
+    "canonical",
+    "authority_granted",
+    "created_at"
+  ],
+  "properties": {
+    "record_kind": {"const": "organ_lineage_record"},
+    "record_id": {"type": "string", "minLength": 1},
+    "body_id": {"type": "string", "minLength": 1},
+    "organ": {"type": "string", "minLength": 1},
+    "transition": {
+      "enum": [
+        "organ_joined",
+        "organ_departed",
+        "permanent_replacement",
+        "successor_assumed",
+        "durable_capability_reassigned"
+      ]
+    },
+    "body_registry_revision": {"type": "string", "minLength": 1},
+    "receipt_anchor": {"type": "string", "minLength": 1},
+    "reason": {"type": "string", "minLength": 1},
+    "from_node_id": {"type": ["string", "null"]},
+    "to_node_id": {"type": ["string", "null"]},
+    "capabilities": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    },
+    "previous_record_id": {"type": ["string", "null"]},
+    "permanent": {"const": true},
+    "canonical": {"const": true},
+    "authority_granted": {"const": false},
+    "created_at": {"type": "string", "minLength": 1}
+  },
+  "additionalProperties": false
+}
